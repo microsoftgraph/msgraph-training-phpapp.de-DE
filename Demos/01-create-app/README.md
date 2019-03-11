@@ -1,0 +1,3 @@
+# <a name="completed-module-create-a-php-web-app"></a>Abgeschlossenes Modul: Erstellen einer PHP-Web-App
+
+Die Version des Projekts in diesem Verzeichnis spiegelt das Abschließen des Lernprogramms durch [Erstellen einer PHP-Web-App](https://docs.microsoft.com/graph/training/php-tutorial?tutorial-step=1)wider. Wenn Sie diese Version des Projekts verwenden, müssen Sie den Rest des Lernprogramms ab [Registrieren der APP im Portal](https://docs.microsoft.com/graph/training/php-tutorial?tutorial-step=2)abschließen.
