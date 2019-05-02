@@ -255,7 +255,7 @@ Starten Sie den Server neu, und führen Sie den Anmeldevorgang durch. Sie sollte
 
 Klicken Sie auf den Benutzer Avatar in der oberen rechten Ecke, **** um auf den Link abmelden zuzugreifen. Wenn **** Sie auf Abmelden klicken, wird die Sitzung zurückgesetzt, und Sie kehren zur Startseite.
 
-![Screenshot des Dropdownmenüs mit dem Link "abMelden"](./images/add-aad-auth-02.png)
+![Screenshot des Dropdownmenüs mit dem Link "Abmelden"](./images/add-aad-auth-02.png)
 
 ## <a name="refreshing-tokens"></a>Aktualisieren von Token
 

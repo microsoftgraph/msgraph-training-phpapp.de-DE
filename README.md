@@ -2,7 +2,7 @@
 
 In diesem Modul erfahren Sie, wie Sie mit Microsoft Graph auf Daten in Office 365 zugreifen können, indem Sie PHP-Webanwendungen erstellen.
 
-## <a name="lab---build-php-apps-with-microsoft-graph"></a>Lab-Build PHP apps with Microsoft Graph
+## <a name="lab---build-php-apps-with-microsoft-graph"></a>Lab-Build php apps with Microsoft Graph
 
 In dieser Übungseinheit erstellen Sie eine PHP-Webanwendung mithilfe des Azure AD v2-Authentifizierungs Endpunkts für den Zugriff auf Daten in Office 365 mit Microsoft Graph.
 
@@ -24,6 +24,6 @@ Wenn Sie möchten, dass das fertige Beispiel anhand dieser Übungseinheit generi
 
 ## <a name="disclaimer"></a>Verzichtserklärung
 
-**DIESER CODE wird ohne ** Gewähr bereitgestellt, weder ausdrücklich noch implizit, einschließlich impliziter Garantien der Eignung für einen bestimmten Zweck, marktGÄNGIGKEIT oder Nichtverletzung.**
+**Dieser Code wird ohne ** Gewähr bereitgestellt, weder ausdrücklich noch implizit, einschließlich impliziter Garantien der Eignung für einen bestimmten Zweck, MARKTGÄNGIGKEIT oder Nichtverletzung.**
 
 In diesem Projekt wurden die [Microsoft Open Source-Verhaltensregeln](https://opensource.microsoft.com/codeofconduct/) übernommen. Weitere Informationen finden Sie unter [Häufig gestellte Fragen zu Verhaltensregeln](https://opensource.microsoft.com/codeofconduct/faq/), oder richten Sie Ihre Fragen oder Kommentare an [opencode@microsoft.com](mailto:opencode@microsoft.com).
