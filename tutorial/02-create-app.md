@@ -12,7 +12,7 @@ Laravel erstellt ein neues Verzeichnis mit `graph-tutorial` dem Namen und Gerüs
 php artisan serve
 ```
 
-Öffnen Sie Ihren Browser und navigieren Sie zu `http://localhost:8000`. Wenn alles funktioniert, wird eine standardmäßige Laravel-Seite angezeigt. Wenn diese Seite nicht angezeigt wird, überprüfen Sie die [Laravel-Dokumente](https://laravel.com/docs/5.6).
+Öffnen Sie Ihren Browser und navigieren Sie zu `http://localhost:8000`. Wenn alles funktioniert, wird eine standardmäßige Laravel-Seite angezeigt. Wenn diese Seite nicht angezeigt wird, überprüfen Sie die [Laravel-Dokumente](https://laravel.com/docs/6.0).
 
 Installieren Sie vor dem Verschieben einige zusätzliche Bibliotheken, die Sie später verwenden werden:
 
@@ -116,7 +116,7 @@ Erstellen Sie zunächst das globale Layout für die app. Erstellen Sie eine neue
 
 Dieser Code fügt [Bootstrap](http://getbootstrap.com/) für einfaches Styling und [Font awesome](https://fontawesome.com/) für einige einfache Symbole hinzu. Außerdem wird ein globales Layout mit einer Navigationsleiste definiert.
 
-Öffnen `./public/css/app.css` Sie nun und ersetzen Sie den gesamten Inhalt durch Folgendes.
+Erstellen Sie ein neues Verzeichnis im `./public` Verzeichnis mit `css`dem Namen, und erstellen Sie dann eine `./public/css` neue Datei `app.css`im Verzeichnis mit dem Namen. Fügen Sie den folgenden Code hinzu.
 
 ```css
 body {
