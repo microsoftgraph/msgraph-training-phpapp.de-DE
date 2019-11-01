@@ -62,7 +62,13 @@ class AuthController extends Controller
     $request->session()->forget('oauthState');
     $providedState = $request->query('state');
 
-    if (!isset($expectedState) || !isset($providedState) || $expectedState != $providedState) {
+    if (!isset($expectedState)) {
+      // If there is no expected state in the session,
+      // do nothing and redirect to the home page.
+      return redirect('/');
+    }
+
+    if (!isset($providedState) || $expectedState != $providedState) {
       return redirect('/')
         ->with('error', 'Invalid auth state')
         ->with('errorDetail', 'The provided auth state did not match the expected value');
@@ -253,7 +259,7 @@ Starten Sie den Server neu, und fahren Sie mit dem Anmeldevorgang fort. Sie soll
 
 ![Ein Screenshot der Startseite nach der Anmeldung](./images/add-aad-auth-01.png)
 
-Klicken Sie in der oberen rechten Ecke auf den Avatar des Benutzers **** , um auf den Abmeldelink zuzugreifen. Durch **** klicken auf Abmelden wird die Sitzung zurückgesetzt, und Sie kehren zur Startseite zurück.
+Klicken Sie in der oberen rechten Ecke auf den Avatar des Benutzers, um auf den **Abmelde** Link zuzugreifen. Durch Klicken auf **Abmelden** wird die Sitzung zurückgesetzt, und Sie kehren zur Startseite zurück.
 
 ![Screenshot des Dropdownmenüs mit dem Link zum Abmelden](./images/add-aad-auth-02.png)
 
