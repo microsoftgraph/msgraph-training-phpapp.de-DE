@@ -2,332 +2,247 @@
 
 In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die Authentifizierung mit Azure AD zu unterstützen. Dies ist erforderlich, um das erforderliche OAuth-Zugriffstoken zum Aufrufen von Microsoft Graph zu erhalten. In diesem Schritt werden Sie die [oauth2-Client](https://github.com/thephpleague/oauth2-client) Bibliothek in die Anwendung integrieren.
 
-Öffnen Sie `.env` die Datei im Stammverzeichnis Ihrer PHP-Anwendung, und fügen Sie den folgenden Code am Ende der Datei hinzu.
+1. Öffnen Sie `.env` die Datei im Stammverzeichnis Ihrer PHP-Anwendung, und fügen Sie den folgenden Code am Ende der Datei hinzu.
 
-```text
-OAUTH_APP_ID=YOUR_APP_ID_HERE
-OAUTH_APP_PASSWORD=YOUR_APP_PASSWORD_HERE
-OAUTH_REDIRECT_URI=http://localhost:8000/callback
-OAUTH_SCOPES='openid profile offline_access user.read calendars.read'
-OAUTH_AUTHORITY=https://login.microsoftonline.com/common
-OAUTH_AUTHORIZE_ENDPOINT=/oauth2/v2.0/authorize
-OAUTH_TOKEN_ENDPOINT=/oauth2/v2.0/token
-```
+    :::code language="ini" source="../demo/graph-tutorial/.env.example" id="OAuthSettingsSnippet":::
 
-Ersetzen `YOUR APP ID HERE` Sie durch die Anwendungs-ID aus dem Anwendungs Registrierungs Portal, `YOUR APP SECRET HERE` und ersetzen Sie durch das Kennwort, das Sie generiert haben.
+1. Ersetzen `YOUR_APP_ID_HERE` Sie durch die Anwendungs-ID aus dem Anwendungs Registrierungs Portal, `YOUR_APP_PASSWORD_HERE` und ersetzen Sie durch das Kennwort, das Sie generiert haben.
 
-> [!IMPORTANT]
-> Wenn Sie die Quellcodeverwaltung wie git verwenden, wäre es jetzt ein guter Zeitpunkt, die Datei `.env` aus der Quellcodeverwaltung auszuschließen, damit versehentlich keine APP-ID und Ihr Kennwort verloren gehen.
+    > [!IMPORTANT]
+    > Wenn Sie die Quellcodeverwaltung wie git verwenden, wäre es jetzt ein guter Zeitpunkt, die Datei `.env` aus der Quellcodeverwaltung auszuschließen, damit versehentlich keine APP-ID und Ihr Kennwort verloren gehen.
 
 ## <a name="implement-sign-in"></a>Implementieren der Anmeldung
 
-Erstellen Sie eine neue Datei im `./app/Http/Controllers` Verzeichnis mit `AuthController.php` dem Namen, und fügen Sie den folgenden Code hinzu.
+1. Erstellen Sie eine neue Datei im **./app/http/Controllers** -Verzeichnis `AuthController.php` mit dem Namen, und fügen Sie den folgenden Code hinzu.
 
-```PHP
-<?php
+    ```php
+    <?php
 
-namespace App\Http\Controllers;
+    namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+    use App\Http\Controllers\Controller;
+    use Illuminate\Http\Request;
 
-class AuthController extends Controller
-{
-  public function signin()
-  {
-    // Initialize the OAuth client
-    $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-      'clientId'                => env('OAUTH_APP_ID'),
-      'clientSecret'            => env('OAUTH_APP_PASSWORD'),
-      'redirectUri'             => env('OAUTH_REDIRECT_URI'),
-      'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
-      'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
-      'urlResourceOwnerDetails' => '',
-      'scopes'                  => env('OAUTH_SCOPES')
-    ]);
-
-    $authUrl = $oauthClient->getAuthorizationUrl();
-
-    // Save client state so we can validate in callback
-    session(['oauthState' => $oauthClient->getState()]);
-
-    // Redirect to AAD signin page
-    return redirect()->away($authUrl);
-  }
-
-  public function callback(Request $request)
-  {
-    // Validate state
-    $expectedState = session('oauthState');
-    $request->session()->forget('oauthState');
-    $providedState = $request->query('state');
-
-    if (!isset($expectedState)) {
-      // If there is no expected state in the session,
-      // do nothing and redirect to the home page.
-      return redirect('/');
-    }
-
-    if (!isset($providedState) || $expectedState != $providedState) {
-      return redirect('/')
-        ->with('error', 'Invalid auth state')
-        ->with('errorDetail', 'The provided auth state did not match the expected value');
-    }
-
-    // Authorization code should be in the "code" query param
-    $authCode = $request->query('code');
-    if (isset($authCode)) {
-      // Initialize the OAuth client
-      $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-        'clientId'                => env('OAUTH_APP_ID'),
-        'clientSecret'            => env('OAUTH_APP_PASSWORD'),
-        'redirectUri'             => env('OAUTH_REDIRECT_URI'),
-        'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
-        'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
-        'urlResourceOwnerDetails' => '',
-        'scopes'                  => env('OAUTH_SCOPES')
-      ]);
-
-      try {
-        // Make the token request
-        $accessToken = $oauthClient->getAccessToken('authorization_code', [
-          'code' => $authCode
+    class AuthController extends Controller
+    {
+      public function signin()
+      {
+        // Initialize the OAuth client
+        $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+          'clientId'                => env('OAUTH_APP_ID'),
+          'clientSecret'            => env('OAUTH_APP_PASSWORD'),
+          'redirectUri'             => env('OAUTH_REDIRECT_URI'),
+          'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
+          'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
+          'urlResourceOwnerDetails' => '',
+          'scopes'                  => env('OAUTH_SCOPES')
         ]);
 
-        // TEMPORARY FOR TESTING!
-        return redirect('/')
-          ->with('error', 'Access token received')
-          ->with('errorDetail', $accessToken->getToken());
+        $authUrl = $oauthClient->getAuthorizationUrl();
+
+        // Save client state so we can validate in callback
+        session(['oauthState' => $oauthClient->getState()]);
+
+        // Redirect to AAD signin page
+        return redirect()->away($authUrl);
       }
-      catch (League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
+
+      public function callback(Request $request)
+      {
+        // Validate state
+        $expectedState = session('oauthState');
+        $request->session()->forget('oauthState');
+        $providedState = $request->query('state');
+
+        if (!isset($expectedState)) {
+          // If there is no expected state in the session,
+          // do nothing and redirect to the home page.
+          return redirect('/');
+        }
+
+        if (!isset($providedState) || $expectedState != $providedState) {
+          return redirect('/')
+            ->with('error', 'Invalid auth state')
+            ->with('errorDetail', 'The provided auth state did not match the expected value');
+        }
+
+        // Authorization code should be in the "code" query param
+        $authCode = $request->query('code');
+        if (isset($authCode)) {
+          // Initialize the OAuth client
+          $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+            'clientId'                => env('OAUTH_APP_ID'),
+            'clientSecret'            => env('OAUTH_APP_PASSWORD'),
+            'redirectUri'             => env('OAUTH_REDIRECT_URI'),
+            'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
+            'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
+            'urlResourceOwnerDetails' => '',
+            'scopes'                  => env('OAUTH_SCOPES')
+          ]);
+
+          try {
+            // Make the token request
+            $accessToken = $oauthClient->getAccessToken('authorization_code', [
+              'code' => $authCode
+            ]);
+
+            // TEMPORARY FOR TESTING!
+            return redirect('/')
+              ->with('error', 'Access token received')
+              ->with('errorDetail', $accessToken->getToken());
+          }
+          catch (League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
+            return redirect('/')
+              ->with('error', 'Error requesting access token')
+              ->with('errorDetail', $e->getMessage());
+          }
+        }
+
         return redirect('/')
-          ->with('error', 'Error requesting access token')
-          ->with('errorDetail', $e->getMessage());
+          ->with('error', $request->query('error'))
+          ->with('errorDetail', $request->query('error_description'));
       }
     }
+    ```
 
-    return redirect('/')
-      ->with('error', $request->query('error'))
-      ->with('errorDetail', $request->query('error_description'));
-  }
-}
-```
+    Dadurch wird ein Controller mit zwei Aktionen definiert `signin` : `callback`und.
 
-Dadurch wird ein Controller mit zwei Aktionen definiert `signin` : `callback`und.
+    Durch `signin` die Aktion wird die Azure AD SignIn-URL generiert `state` , der vom OAuth-Client generierte Wert gespeichert und anschließend der Browser an die Azure AD SignIn-Seite umgeleitet.
 
-Durch `signin` die Aktion wird die Azure AD SignIn-URL generiert `state` , der vom OAuth-Client generierte Wert gespeichert und anschließend der Browser an die Azure AD SignIn-Seite umgeleitet.
+    In `callback` der Aktion wird Azure weitergeleitet, nachdem das SignIn abgeschlossen wurde. Durch diese Aktion wird sicher `state` gestellt, dass der Wert mit dem gespeicherten Wert übereinstimmt, und dann Benutzer der Autorisierungscode, der von Azure gesendet wurde, um ein Zugriffstoken anzufordern. Anschließend wird mit dem Zugriffstoken im temporären Fehlerwert zurück zur Startseite umgeleitet. Verwenden Sie diese, um zu überprüfen, ob die Anmeldung funktionsfähig ist, bevor Sie fortfahren.
 
-In `callback` der Aktion wird Azure weitergeleitet, nachdem das SignIn abgeschlossen wurde. Durch diese Aktion wird sicher `state` gestellt, dass der Wert mit dem gespeicherten Wert übereinstimmt, und dann Benutzer der Autorisierungscode, der von Azure gesendet wurde, um ein Zugriffstoken anzufordern. Anschließend wird mit dem Zugriffstoken im temporären Fehlerwert zurück zur Startseite umgeleitet. Wir verwenden dies, um zu überprüfen, ob unsere Anmeldung funktionsfähig ist, bevor Sie fortfahren. Bevor wir testen, müssen wir die Routen zu `./routes/web.php`hinzufügen.
+1. Fügen Sie die Routen zu **./routes/Web.php**hinzu.
 
-```PHP
-Route::get('/signin', 'AuthController@signin');
-Route::get('/callback', 'AuthController@callback');
-```
+    ```php
+    Route::get('/signin', 'AuthController@signin');
+    Route::get('/callback', 'AuthController@callback');
+    ```
 
-Starten Sie den Server, und `https://localhost:8000`navigieren Sie zu. Klicken Sie auf die Anmeldeschaltfläche, und Sie sollten zu `https://login.microsoftonline.com`umgeleitet werden. Melden Sie sich mit Ihrem Microsoft-Konto an, und stimmen Sie den angeforderten Berechtigungen zu. Der Browser wird an die APP umgeleitet, wobei das Token angezeigt wird.
+1. Starten Sie den Server, und `https://localhost:8000`navigieren Sie zu. Klicken Sie auf die Schaltfläche zum Anmelden, um zu `https://login.microsoftonline.com`weitergeleitet zu werden. Melden Sie sich mit Ihrem Microsoft-Konto an, und stimmen Sie den angeforderten Berechtigungen zu. Der Browser leitet zur App um, in der Sie das Token sehen.
 
-### <a name="get-user-details"></a>Abrufen von Benutzer Details
+### <a name="get-user-details"></a>Benutzerdetails abrufen
 
-Aktualisieren Sie `callback` die- `/app/Http/Controllers/AuthController.php` Methode in, um das Profil des Benutzers aus Microsoft Graph abzurufen.
+In diesem Abschnitt aktualisieren Sie die `callback` -Methode, um das Profil des Benutzers aus Microsoft Graph abzurufen.
 
-Fügen Sie zunächst die folgenden `use` Anweisungen am Anfang der Datei unterhalb der `namespace App\Http\Controllers;` -Codezeile ein.
+1. Fügen Sie die `use` folgenden Anweisungen am oberen Rand von **/App/http/Controllers/AuthController.php**unterhalb der `namespace App\Http\Controllers;` -Kante hinzu.
 
-```php
-use Microsoft\Graph\Graph;
-use Microsoft\Graph\Model;
-```
+    ```php
+    use Microsoft\Graph\Graph;
+    use Microsoft\Graph\Model;
+    ```
 
-Ersetzen Sie `try` den Block in `callback` der-Methode durch den folgenden Code.
+1. Ersetzen Sie `try` den Block in `callback` der-Methode durch den folgenden Code.
 
-```php
-try {
-  // Make the token request
-  $accessToken = $oauthClient->getAccessToken('authorization_code', [
-    'code' => $authCode
-  ]);
+    ```php
+    try {
+      // Make the token request
+      $accessToken = $oauthClient->getAccessToken('authorization_code', [
+        'code' => $authCode
+      ]);
 
-  $graph = new Graph();
-  $graph->setAccessToken($accessToken->getToken());
+      $graph = new Graph();
+      $graph->setAccessToken($accessToken->getToken());
 
-  $user = $graph->createRequest('GET', '/me')
-    ->setReturnType(Model\User::class)
-    ->execute();
+      $user = $graph->createRequest('GET', '/me')
+        ->setReturnType(Model\User::class)
+        ->execute();
 
-  // TEMPORARY FOR TESTING!
-  return redirect('/')
-    ->with('error', 'Access token received')
-    ->with('errorDetail', 'User:'.$user->getDisplayName().', Token:'.$accessToken->getToken());
-}
-```
+      // TEMPORARY FOR TESTING!
+      return redirect('/')
+        ->with('error', 'Access token received')
+        ->with('errorDetail', 'User:'.$user->getDisplayName().', Token:'.$accessToken->getToken());
+    }
+    ```
 
 Der neue Code erstellt ein `Graph` -Objekt, weist das Zugriffstoken zu und verwendet es dann, um das Profil des Benutzers anzufordern. Der Anzeigename des Benutzers wird der temporären Ausgabe zu Testzwecken hinzugefügt.
 
-## <a name="storing-the-tokens"></a>Speichern der Token
+## <a name="storing-the-tokens"></a>Speichern des Tokens
 
-Nachdem Sie nun Token erhalten können, ist es an der Zeit, eine Möglichkeit zum Speichern in der APP zu implementieren. Da es sich um eine Beispiel-App handelt, speichern Sie Sie aus Gründen der Einfachheit in der Sitzung. Eine reale APP würde eine zuverlässigere sichere Speicherlösung wie eine Datenbank verwenden.
+Nun, da Sie Token abrufen können, ist es an der Zeit, eine Möglichkeit einzurichten, diese in der App zu speichern. Da es sich um eine Beispiel-App handelt, speichern Sie Sie aus Gründen der Einfachheit in der Sitzung. Eine echte App würde eine zuverlässigere sichere Speicherlösung wie eine Datenbank verwenden.
 
-Erstellen Sie ein neues Verzeichnis im `./app` Verzeichnis mit `TokenStore`dem Namen, erstellen Sie dann eine neue Datei in `TokenCache.php`dem Verzeichnis mit dem Namen, und fügen Sie den folgenden Code hinzu.
+1. Erstellen Sie ein neues Verzeichnis im **./app** -Verzeichnis `TokenStore`mit dem Namen, erstellen Sie dann eine neue Datei `TokenCache.php`in dem Verzeichnis mit dem Namen, und fügen Sie den folgenden Code hinzu.
 
-```php
-<?php
+    ```php
+    <?php
 
-namespace App\TokenStore;
+    namespace App\TokenStore;
 
-class TokenCache {
-  public function storeTokens($accessToken, $user) {
-    session([
-      'accessToken' => $accessToken->getToken(),
-      'refreshToken' => $accessToken->getRefreshToken(),
-      'tokenExpires' => $accessToken->getExpires(),
-      'userName' => $user->getDisplayName(),
-      'userEmail' => null !== $user->getMail() ? $user->getMail() : $user->getUserPrincipalName()
-    ]);
-  }
+    class TokenCache {
+      public function storeTokens($accessToken, $user) {
+        session([
+          'accessToken' => $accessToken->getToken(),
+          'refreshToken' => $accessToken->getRefreshToken(),
+          'tokenExpires' => $accessToken->getExpires(),
+          'userName' => $user->getDisplayName(),
+          'userEmail' => null !== $user->getMail() ? $user->getMail() : $user->getUserPrincipalName()
+        ]);
+      }
 
-  public function clearTokens() {
-    session()->forget('accessToken');
-    session()->forget('refreshToken');
-    session()->forget('tokenExpires');
-    session()->forget('userName');
-    session()->forget('userEmail');
-  }
+      public function clearTokens() {
+        session()->forget('accessToken');
+        session()->forget('refreshToken');
+        session()->forget('tokenExpires');
+        session()->forget('userName');
+        session()->forget('userEmail');
+      }
 
-  public function getAccessToken() {
-    // Check if tokens exist
-    if (empty(session('accessToken')) ||
-        empty(session('refreshToken')) ||
-        empty(session('tokenExpires'))) {
-      return '';
+      public function getAccessToken() {
+        // Check if tokens exist
+        if (empty(session('accessToken')) ||
+            empty(session('refreshToken')) ||
+            empty(session('tokenExpires'))) {
+          return '';
+        }
+
+        return session('accessToken');
+      }
     }
+    ```
 
-    return session('accessToken');
-  }
-}
-```
+1. Fügen Sie die `use` folgende Anweisung am oberen Rand von **./app/http/Controllers/AuthController.php**unterhalb der `namespace App\Http\Controllers;` -Leiste hinzu.
 
-Aktualisieren Sie dann die `callback` -Funktion in `AuthController` der-Klasse, um die Token in der Sitzung zu speichern und zur Hauptseite zurückzuleiten.
+    ```php
+    use App\TokenStore\TokenCache;
+    ```
 
-Fügen Sie zunächst die folgende `use` Anweisung am oberen Rand von `./app/Http/Controllers/AuthController.php`hinzu, unterhalb `namespace App\Http\Controllers;` der-gerade.
+1. Ersetzen Sie `try` den Block in der `callback` vorhandenen Funktion durch Folgendes.
 
-```php
-use App\TokenStore\TokenCache;
-```
-
-Ersetzen Sie dann `try` den Block in der `callback` vorhandenen Funktion durch Folgendes.
-
-```php
-try {
-  // Make the token request
-  $accessToken = $oauthClient->getAccessToken('authorization_code', [
-    'code' => $authCode
-  ]);
-
-  $graph = new Graph();
-  $graph->setAccessToken($accessToken->getToken());
-
-  $user = $graph->createRequest('GET', '/me')
-    ->setReturnType(Model\User::class)
-    ->execute();
-
-  $tokenCache = new TokenCache();
-  $tokenCache->storeTokens($accessToken, $user);
-
-  return redirect('/');
-}
-```
+    :::code language="php" source="../demo/graph-tutorial/app/Http/Controllers/AuthController.php" id="StoreTokensSnippet":::
 
 ## <a name="implement-sign-out"></a>Implementieren der Abmeldung
 
-Bevor Sie dieses neue Feature testen, fügen Sie eine Möglichkeit zum Abmelden hinzu. Fügen Sie der `AuthController` Klasse die folgende Aktion hinzu.
+Bevor Sie dieses neue Feature testen, fügen Sie eine Möglichkeit zum Abmelden hinzu.
 
-```PHP
-public function signout()
-{
-  $tokenCache = new TokenCache();
-  $tokenCache->clearTokens();
-  return redirect('/');
-}
-```
+1. Fügen Sie der `AuthController` Klasse die folgende Aktion hinzu.
 
-Fügen Sie diese Aktion `./routes/web.php`zu hinzu.
+    :::code language="php" source="../demo/graph-tutorial/app/Http/Controllers/AuthController.php" id="SignOutSnippet":::
 
-```PHP
-Route::get('/signout', 'AuthController@signout');
-```
+1. Fügen Sie diese Aktion zu **./routes/Web.php**.
 
-Starten Sie den Server neu, und fahren Sie mit dem Anmeldevorgang fort. Sie sollten wieder auf der Startseite enden, aber die Benutzeroberfläche sollte sich ändern, um anzugeben, dass Sie angemeldet sind.
+    ```php
+    Route::get('/signout', 'AuthController@signout');
+    ```
 
-![Ein Screenshot der Startseite nach der Anmeldung](./images/add-aad-auth-01.png)
+1. Starten Sie den Server neu, und fahren Sie mit dem Anmeldevorgang fort. Sie sollten wieder auf der Startseite enden, aber die Benutzeroberfläche sollte sich ändern, um anzugeben, dass Sie angemeldet sind.
 
-Klicken Sie in der oberen rechten Ecke auf den Avatar des Benutzers, um auf den **Abmelde** Link zuzugreifen. Durch Klicken auf **Abmelden** wird die Sitzung zurückgesetzt, und Sie kehren zur Startseite zurück.
+    ![Screenshot der Startseite nach dem Anmelden](./images/add-aad-auth-01.png)
 
-![Screenshot des Dropdownmenüs mit dem Link zum Abmelden](./images/add-aad-auth-02.png)
+1. Klicken Sie in der oberen rechten Ecke auf den Avatar des Benutzers, um auf den **Abmelde** Link zuzugreifen. Wenn Sie auf **Abmelden** klicken, wird die Sitzung zurückgesetzt und Sie kehren zur Startseite zurück.
+
+    ![Screenshot des Dropdown-Menüs mit dem Link „Abmelden“](./images/add-aad-auth-02.png)
 
 ## <a name="refreshing-tokens"></a>Aktualisieren von Token
 
 Zu diesem Zeitpunkt verfügt Ihre Anwendung über ein Zugriffstoken, das in der `Authorization` Kopfzeile von API-aufrufen gesendet wird. Dies ist das Token, das es der App ermöglicht, im Namen des Benutzers auf Microsoft Graph zuzugreifen.
 
-Dieses Token ist jedoch nur kurzlebig. Das Token läuft eine Stunde nach seiner Ausgabe ab. Hier wird das Aktualisierungstoken nützlich. Das Aktualisierungstoken ermöglicht der APP, ein neues Zugriffstoken anzufordern, ohne dass sich der Benutzer erneut anmelden muss. Aktualisieren Sie den Token-Verwaltungscode, um die Token-Aktualisierung zu implementieren.
+Dieses Token ist jedoch nur kurzzeitig verfügbar. Das Token läuft eine Stunde nach seiner Ausgabe ab. An dieser Stelle kommt das Aktualisierungstoken ins Spiel. Anhand des Aktualisierungstoken ist die App in der Lage, ein neues Zugriffstoken anzufordern, ohne dass der Benutzer sich erneut anmelden muss. Aktualisieren Sie den Token-Verwaltungscode, um die Token-Aktualisierung zu implementieren.
 
-Öffnen `./app/TokenStore/TokenCache.php` Sie, und fügen Sie die folgende `TokenCache` Funktion zur-Klasse hinzu.
+1. Öffnen Sie **/App/TokenStore/TokenCache.php** , und fügen Sie der `TokenCache` -Klasse die folgende Funktion hinzu.
 
-```php
-public function updateTokens($accessToken) {
-  session([
-    'accessToken' => $accessToken->getToken(),
-    'refreshToken' => $accessToken->getRefreshToken(),
-    'tokenExpires' => $accessToken->getExpires()
-  ]);
-}
-```
+    :::code language="php" source="../demo/graph-tutorial/app/TokenStore/TokenCache.php" id="UpdateTokensSnippet":::
 
-Ersetzen Sie dann die `getAccessToken` vorhandene Funktion durch Folgendes.
+1. Ersetzen Sie die vorhandene `getAccessToken`-Funktion durch Folgendes.
 
-```php
-public function getAccessToken() {
-  // Check if tokens exist
-  if (empty(session('accessToken')) ||
-      empty(session('refreshToken')) ||
-      empty(session('tokenExpires'))) {
-    return '';
-  }
-
-  // Check if token is expired
-  //Get current time + 5 minutes (to allow for time differences)
-  $now = time() + 300;
-  if (session('tokenExpires') <= $now) {
-    // Token is expired (or very close to it)
-    // so let's refresh
-
-    // Initialize the OAuth client
-    $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-      'clientId'                => env('OAUTH_APP_ID'),
-      'clientSecret'            => env('OAUTH_APP_PASSWORD'),
-      'redirectUri'             => env('OAUTH_REDIRECT_URI'),
-      'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
-      'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
-      'urlResourceOwnerDetails' => '',
-      'scopes'                  => env('OAUTH_SCOPES')
-    ]);
-
-    try {
-      $newToken = $oauthClient->getAccessToken('refresh_token', [
-        'refresh_token' => session('refreshToken')
-      ]);
-
-      // Store the new values
-      $this->updateTokens($newToken);
-
-      return $newToken->getToken();
-    }
-    catch (League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
-      return '';
-    }
-  }
-
-  // Token is still valid, just return it
-  return session('accessToken');
-}
-```
+    :::code language="php" source="../demo/graph-tutorial/app/TokenStore/TokenCache.php" id="GetAccessTokenSnippet":::
 
 Diese Methode überprüft zunächst, ob das Zugriffstoken abgelaufen oder nahezu abläuft. Wenn dies der Fall ist, wird das Aktualisierungstoken verwendet, um neue Token abzurufen, dann wird der Cache aktualisiert und das neue Zugriffstoken zurückgegeben.
