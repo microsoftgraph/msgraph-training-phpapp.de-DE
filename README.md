@@ -14,7 +14,11 @@ Wenn Sie das fertige Beispiel nur generieren möchten, indem Sie dieser Übungse
 
 - [Fertig gestelltes Projekt](demo)
 
-## <a name="disclaimer"></a>Verzichtserklärung
+## <a name="more-samples"></a>Weitere Beispiele
+
+Wenn Sie nach anderen Diagrammbeispielen außerhalb von Kalender Szenarien suchen oder andere Beispiele für dieses Projekt mitwirken möchten, lesen Sie die [Verzweigung Beispiele](https://github.com/microsoftgraph/msgraph-training-phpapp/tree/samples).
+
+## <a name="disclaimer"></a>Haftungsausschluss
 
 **Dieser Code wird ohne jegliche ausdrückliche oder implizite *Gewährleistung bereit* gestellt, einschließlich impliziter Garantien für die Eignung für einen bestimmten Zweck, die Marktgängigkeit oder die Nichtverletzung.**
 

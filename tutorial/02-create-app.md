@@ -23,6 +23,12 @@ Bevor Sie fortfahren, installieren Sie einige zusätzliche Pakete, die Sie spät
 - [oauth2-Client](https://github.com/thephpleague/oauth2-client) für die Verarbeitung von Anmelde-und OAuth-Token-Flows.
 - [Microsoft-Graph](https://github.com/microsoftgraph/msgraph-sdk-php) für das tätigen von Anrufen an Microsoft Graph.
 
+1. Führen Sie den folgenden Befehl aus, um die vorhandene Version von zu entfernen `guzzlehttp/guzzle` . Die von Laravel installierte Version steht in Konflikt mit der Version, die für das Microsoft Graph php SDK erforderlich ist.
+
+    ```Shell
+    composer remove guzzlehttp/guzzle
+    ```
+
 1. Führen Sie den folgenden Befehl in der CLI aus.
 
     ```Shell
@@ -31,29 +37,29 @@ Bevor Sie fortfahren, installieren Sie einige zusätzliche Pakete, die Sie spät
 
 ## <a name="design-the-app"></a>Entwerfen der App
 
-1. Erstellen Sie eine neue Datei im **./Resources/views** -Verzeichnis `layout.blade.php` mit dem Namen, und fügen Sie den folgenden Code hinzu.
+1. Erstellen Sie eine neue Datei im **./Resources/views** -Verzeichnis mit dem Namen `layout.blade.php` , und fügen Sie den folgenden Code hinzu.
 
     :::code language="php" source="../demo/graph-tutorial/resources/views/layout.blade.php" id="LayoutSnippet":::
 
     Dieser Code fügt [Bootstrap](http://getbootstrap.com/) zur einfachen Formatierung hinzu, und [Font Awesome](https://fontawesome.com/) für einige einfache Symbole. Außerdem wird ein globales Layout mit einer Navigationsleiste definiert.
 
-1. Erstellen Sie ein neues Verzeichnis im `./public` Verzeichnis mit `css`dem Namen, und erstellen Sie dann eine `./public/css` neue Datei `app.css`im Verzeichnis mit dem Namen. Fügen Sie den folgenden Code hinzu.
+1. Erstellen Sie ein neues Verzeichnis im `./public` Verzeichnis mit dem Namen `css` , und erstellen Sie dann eine neue Datei im `./public/css` Verzeichnis mit dem Namen `app.css` . Fügen Sie den folgenden Code hinzu.
 
     :::code language="css" source="../demo/graph-tutorial/public/css/app.css":::
 
-1. Öffnen Sie `./resources/views/welcome.blade.php` die Datei, und ersetzen Sie den Inhalt durch Folgendes.
+1. Öffnen Sie die `./resources/views/welcome.blade.php` Datei, und ersetzen Sie den Inhalt durch Folgendes.
 
     :::code language="php" source="../demo/graph-tutorial/resources/views/welcome.blade.php" id="WelcomeSnippet":::
 
-1. Aktualisieren Sie die `Controller` Basisklasse in **./app/http/Controllers/Controller.php** , indem Sie der Klasse die folgende Funktion hinzufügen.
+1. Aktualisieren Sie die Basis `Controller` Klasse in **./app/http/Controllers/Controller.php** , indem Sie der Klasse die folgende Funktion hinzufügen.
 
     :::code language="php" source="../demo/graph-tutorial/app/Http/Controllers/Controller.php" id="LoadViewDataSnippet":::
 
-1. Erstellen Sie eine neue Datei im `./app/Http/Controllers` Verzeichnis mit `HomeController.php` dem Namen, und fügen Sie den folgenden Code hinzu.
+1. Erstellen Sie eine neue Datei im `./app/Http/Controllers` Verzeichnis mit dem Namen `HomeController.php` , und fügen Sie den folgenden Code hinzu.
 
     :::code language="php" source="../demo/graph-tutorial/app/Http/Controllers/HomeController.php":::
 
-1. Aktualisieren Sie die Route `./routes/web.php` in, um den neuen Controller zu verwenden. Ersetzen Sie den gesamten Inhalt dieser Datei durch Folgendes:
+1. Aktualisieren Sie die Route in `./routes/web.php` , um den neuen Controller zu verwenden. Ersetzen Sie den gesamten Inhalt dieser Datei durch Folgendes:
 
     ```php
     <?php
