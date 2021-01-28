@@ -4,7 +4,7 @@ In dieser Übung integrieren Sie Microsoft Graph in die Anwendung. Für diese An
 
 ## <a name="get-calendar-events-from-outlook"></a>Abrufen von Kalenderereignissen von Outlook
 
-1. Erstellen Sie ein neues Verzeichnis im **Verzeichnis ./app** mit dem Namen, erstellen Sie dann eine neue Datei in diesem Verzeichnis namens , und `TimeZones` fügen Sie den folgenden Code `TimeZones.php` hinzu.
+1. Erstellen Sie ein neues Verzeichnis im **Verzeichnis ./app** mit dem Namen, erstellen Sie dann eine neue Datei in diesem Verzeichnis namens , und fügen Sie `TimeZones` den folgenden Code `TimeZones.php` hinzu.
 
     :::code language="php" source="../demo/graph-tutorial/app/TimeZones/TimeZones.php":::
 
@@ -38,6 +38,8 @@ In dieser Übung integrieren Sie Microsoft Graph in die Anwendung. Für diese An
         // Get start and end of week
         $startOfWeek = new \DateTimeImmutable('sunday -1 week', $timezone);
         $endOfWeek = new \DateTimeImmutable('sunday', $timezone);
+
+        $viewData['dateRange'] = $startOfWeek->format('M j, Y').' - '.$endOfWeek->format('M j, Y');
 
         $queryParams = array(
           'startDateTime' => $startOfWeek->format(\DateTimeInterface::ISO8601),

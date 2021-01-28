@@ -1,79 +1,62 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
 <a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
 ## <a name="about-laravel"></a>Informationen zu Laravel
 
-Laravel ist ein Webanwendungsframework mit expressiver, eleganter Syntax. Wir glauben, dass die Entwicklung eine erfreuliche und kreative Erfahrung sein muss, damit Sie wirklich erfüllt werden kann. Laravel nimmt die Entwicklung in den Schmerz, indem es allgemeine Aufgaben erleichtert, die in vielen Webprojekten verwendet werden, beispielsweise:
+Laravel ist ein Webanwendungsframework mit ausdrucksstärker, eleganter Syntax. Wir glauben, dass die Entwicklung ein erlebnis- und kreatives Erlebnis sein muss, um wirklich erfüllt zu sein. Laravel entnimmt die Probleme bei der Entwicklung, indem sie gängige Aufgaben in vielen Webprojekten erleichtert, z. B.:
 
-- [Einfaches, schnelles Routingmodul](https://laravel.com/docs/routing).
-- [Leistungsfähiger Abhängigkeitsinjektionscontainer](https://laravel.com/docs/container).
-- Mehrere Back-Ends für [Sitzungs](https://laravel.com/docs/session) -und [Cache](https://laravel.com/docs/cache) Speicher.
-- Ausdrucksstarke, intuitive [Datenbank-ORM](https://laravel.com/docs/eloquent).
-- Datenbankunabhängige [Schema Migrationen](https://laravel.com/docs/migrations).
-- [Robuste hintergrundauftrags Verarbeitung](https://laravel.com/docs/queues).
-- [Echtzeitereignis Übertragung](https://laravel.com/docs/broadcasting).
+- [Einfaches, schnelles Routingmodul.](https://laravel.com/docs/routing)
+- [Leistungsstarker Abhängigkeitsinjektionscontainer.](https://laravel.com/docs/container)
+- Mehrere Back-Ends für [Sitzungs- und](https://laravel.com/docs/session) [Cachespeicher.](https://laravel.com/docs/cache)
+- Ausdrucksstärke, intuitive [Datenbank ORM](https://laravel.com/docs/eloquent).
+- Datenbankagnostische [Schemamigrationen](https://laravel.com/docs/migrations).
+- [Robuste Hintergrundauftragsverarbeitung](https://laravel.com/docs/queues).
+- [Echtzeitereignisübertragung](https://laravel.com/docs/broadcasting).
 
-Laravel ist verfügbar, leistungsfähig und stellt Tools bereit, die für große, robuste Anwendungen erforderlich sind.
+Laravel ist barrierefrei, leistungsstark und bietet Tools, die für große, robuste Anwendungen erforderlich sind.
 
-## <a name="learning-laravel"></a>Lern Laravel
+## <a name="learning-laravel"></a>Lernen von Laravel
 
-Laravel verfügt über die umfassendste und gründlichste [Dokumentation](https://laravel.com/docs) und Video-Lernprogramm Bibliothek aller modernen Webanwendungs-Frameworks, sodass Sie sich mit dem Framework vertraut machen können.
+Laravel verfügt über die [](https://laravel.com/docs) umfassendste und umfassendste Dokumentations- und Videolernprogrammbibliothek aller modernen Webanwendungsframeworks, was die ersten Schritte mit dem Framework sehr gut macht.
 
-Wenn Sie keine Lust haben zu lesen, kann [Laracasts](https://laracasts.com) helfen. Laracasts enthält mehr als 1500 Video-Tutorials zu einer Reihe von Themen, einschließlich Laravel, moderner PHP, Komponententests und JavaScript. Erweitern Sie Ihre Fähigkeiten, indem Sie in unsere umfassende Videobibliothek eingraben.
+Wenn Sie nicht lesen möchten, [kann Laracasts](https://laracasts.com) ihnen helfen. Laracasts enthält über 1500 Videolernprogramme zu einer Reihe von Themen, einschließlich Laravel, moderner PHP, Komponententests und JavaScript. Erweitern Sie Ihre Fähigkeiten, indem Sie sich in unsere umfassende Videobibliothek einmischen.
 
-## <a name="laravel-sponsors"></a>Laravel-Sponsoren
+## <a name="laravel-sponsors"></a>Laravel Sponsors
 
-Wir möchten uns bei den folgenden Sponsoren für die Finanzierung der Laravel-Entwicklung herzlich bedanken. Wenn Sie Interesse daran haben, Sponsor zu werden, besuchen Sie die [Seite Laravel Patreon](https://patreon.com/taylorotwell).
+Wir möchten uns bei den folgenden Sponsoren für die Unterstützung der Entwicklung von Laravel bedanken. Wenn Sie ein Sponsor werden möchten, besuchen Sie bitte die Seite "Laravel [Patreon".](https://patreon.com/taylorotwell)
+
+### <a name="premium-partners"></a>Premiumpartner
 
 - **[Vehikl](https://vehikl.com/)**
-- **[Enger Zusammenarbeit.](https://tighten.co)**
-- **[Kirschbaum-Entwicklungsgruppe](https://kirschbaumdevelopment.com)**
-- **[64 robots](https://64robots.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Gruppe zur Entwicklung von Unterst nkungsbaum](https://kirschbaumdevelopment.com)**
+- **[64 Robote](https://64robots.com)**
 - **[Cubet Techno Labs](https://cubettech.com)**
 - **[Cyber-Ente](https://cyber-duck.co.uk)**
-- **[Britische Software Entwicklung](https://www.britishsoftware.co)**
-- **[WebDock, schnelles VPS-Hosting](https://www.webdock.io/en)**
+- **[Viele](https://www.many.co.uk)**
+- **[Webdock, schnelles VPS-Hosting](https://www.webdock.io/en)**
 - **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Lauf Zeit Konverter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Rechnung Ninja](https://www.invoiceninja.com)
-- [iMi Digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Unerschütterliches Kollektiv](https://steadfastcollective.com/)
-- [Wir sind die robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper-Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP. GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+- **[Curotec](https://www.curotec.com/)**
+- **[OP. GG](https://op.gg)**
 
 ## <a name="contributing"></a>Mitwirkung
 
-Vielen Dank für Ihre Unterstützung für das Laravel-Framework! Der Beitrag Leitfaden finden Sie in der [Laravel-Dokumentation](https://laravel.com/docs/contributions).
+Vielen Dank für Ihre Überlegungen zur Unterstützung des Laravel-Frameworks! Das Beitragshandbuch finden Sie in der [Laravel-Dokumentation.](https://laravel.com/docs/contributions)
 
 ## <a name="code-of-conduct"></a>Verhaltensregeln
 
-Um sicherzustellen, dass die Laravel-Community für alle willkommen ist, überprüfen und befolgen Sie den Verhaltens [Kodex](https://laravel.com/docs/contributions#code-of-conduct).
+Um sicherzustellen, dass die Community von Laravel allen willkommen ist, lesen Sie die Verhaltensregeln, und halten Sie [sie ein.](https://laravel.com/docs/contributions#code-of-conduct)
 
 ## <a name="security-vulnerabilities"></a>Sicherheitsrisiken
 
-Wenn Sie eine Sicherheitsanfälligkeit in Laravel entdecken, senden Sie eine e-Mail an Taylor Otwell über [Taylor@laravel.com](mailto:taylor@laravel.com). Alle Sicherheitsrisiken werden umgehend behoben.
+Wenn Sie eine Sicherheitslücke in Laravel entdecken, senden Sie eine E-Mail an Otwell über [taylor@laravel.com](mailto:taylor@laravel.com). Alle Sicherheitsrisiken werden umgehend behoben.
 
 ## <a name="license"></a>Lizenz
 
-Das Laravel-Framework ist eine Open-Source-Software, die unter der [mit-Lizenz](https://opensource.org/licenses/MIT)lizenziert ist.
+Das Laravel Framework ist Open-Source-Software, die unter der [MIT-Lizenz lizenziert ist.](https://opensource.org/licenses/MIT)

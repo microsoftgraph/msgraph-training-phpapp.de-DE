@@ -4,12 +4,16 @@ In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die A
 
 1. Öffnen Sie **die env-Datei** im Stammverzeichnis Ihrer PHP-Anwendung, und fügen Sie am Ende der Datei den folgenden Code hinzu.
 
-    :::code language="ini" source="../demo/graph-tutorial/example.env" range="48-54":::
+    :::code language="ini" source="../demo/graph-tutorial/example.env" range="51-57":::
 
-1. Ersetzen `YOUR_APP_ID_HERE` Sie sie durch die Anwendungs-ID aus dem Anwendungsregistrierungsportal, und ersetzen Sie sie durch das `YOUR_APP_PASSWORD_HERE` kennwort, das Sie generiert haben.
+1. Ersetzen `YOUR_APP_ID_HERE` Sie sie durch die Anwendungs-ID aus dem Anwendungsregistrierungsportal, und ersetzen Sie sie durch das `YOUR_APP_SECRET_HERE` kennwort, das Sie generiert haben.
 
     > [!IMPORTANT]
-    > Wenn Sie Quellcodeverwaltung wie Git verwenden, wäre es jetzt ein guter Zeitpunkt, die Datei aus der Quellcodeverwaltung auszuschließen, um zu verhindern, dass versehentlich Ihre App-ID und Ihr Kennwort durch den Speicherverlust `.env` verfingen.
+    > Wenn Sie Quellcodeverwaltung wie Git verwenden, wäre es jetzt ein guter Zeitpunkt, die Datei aus der Quellcodeverwaltung auszuschließen, um zu verhindern, dass versehentlich Ihre App-ID und Ihr Kennwort durch lecks `.env` geht.
+
+1. Erstellen Sie eine neue Datei im Ordner **"./config"** mit dem `azure.php` Namen, und fügen Sie den folgenden Code hinzu.
+
+    :::code language="php" source="../demo/graph-tutorial/config/azure.php":::
 
 ## <a name="implement-sign-in"></a>Implementieren der Anmeldung
 
@@ -29,13 +33,13 @@ In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die A
       {
         // Initialize the OAuth client
         $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-          'clientId'                => env('OAUTH_APP_ID'),
-          'clientSecret'            => env('OAUTH_APP_PASSWORD'),
-          'redirectUri'             => env('OAUTH_REDIRECT_URI'),
-          'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
-          'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
+          'clientId'                => config('azure.appId'),
+          'clientSecret'            => config('azure.appSecret'),
+          'redirectUri'             => config('azure.redirectUri'),
+          'urlAuthorize'            => config('azure.authority').config('azure.authorizeEndpoint'),
+          'urlAccessToken'          => config('azure.authority').config('azure.tokenEndpoint'),
           'urlResourceOwnerDetails' => '',
-          'scopes'                  => env('OAUTH_SCOPES')
+          'scopes'                  => config('azure.scopes')
         ]);
 
         $authUrl = $oauthClient->getAuthorizationUrl();
@@ -71,13 +75,13 @@ In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die A
         if (isset($authCode)) {
           // Initialize the OAuth client
           $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-            'clientId'                => env('OAUTH_APP_ID'),
-            'clientSecret'            => env('OAUTH_APP_PASSWORD'),
-            'redirectUri'             => env('OAUTH_REDIRECT_URI'),
-            'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
-            'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
+            'clientId'                => config('azure.appId'),
+            'clientSecret'            => config('azure.appSecret'),
+            'redirectUri'             => config('azure.redirectUri'),
+            'urlAuthorize'            => config('azure.authority').config('azure.authorizeEndpoint'),
+            'urlAccessToken'          => config('azure.authority').config('azure.tokenEndpoint'),
             'urlResourceOwnerDetails' => '',
-            'scopes'                  => env('OAUTH_SCOPES')
+            'scopes'                  => config('azure.scopes')
           ]);
 
           try {
@@ -109,7 +113,7 @@ In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die A
 
     Die Aktion generiert die Azure AD-Anmelde-URL, speichert den vom OAuth-Client generierten Wert und leitet dann den Browser zur `signin` `state` Azure AD-Anmeldeseite um.
 
-    Die `callback` Aktion leitet Azure um, nachdem die Anmeldung abgeschlossen ist. Diese Aktion stellt sicher, dass der Wert mit dem gespeicherten Wert und dann den von Azure gesendeten Autorisierungscode zum Anfordern eines `state` Zugriffstokens entspricht. Anschließend wird sie mit dem Zugriffstoken im temporären Fehlerwert zurück zur Startseite umgeleitet. Sie können damit überprüfen, ob die Anmeldung funktioniert, bevor Sie weiter arbeiten.
+    Die `callback` Aktion leitet Azure um, nachdem die Anmeldung abgeschlossen ist. Diese Aktion stellt sicher, dass der Wert mit dem gespeicherten Wert und dann den von Azure gesendeten Autorisierungscode zum Anfordern eines `state` Zugriffstokens entspricht. Anschließend wird sie zurück zur Startseite mit dem Zugriffstoken im temporären Fehlerwert umgeleitet. Sie können damit überprüfen, ob die Anmeldung funktioniert, bevor Sie weiter arbeiten.
 
 1. Fügen Sie die Routen zu **./routes/web.php hinzu.**
 
@@ -122,7 +126,7 @@ In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die A
 
 1. Überprüfen Sie die Zustimmungsaufforderung. Die Liste der Berechtigungen entspricht der Liste der Berechtigungsbereiche, die in **.env konfiguriert sind.**
 
-    - **Behalten Sie den Zugriff auf Daten,** auf die Sie zugriffen haben: ( ) Diese Berechtigung wird von MSAL angefordert, um Aktualisierungstoken `offline_access` abzurufen.
+    - **Behalten Sie den Zugriff auf Daten bei,** auf die Sie zugriffen haben: ( ) Diese Berechtigung wird von MSAL angefordert, um Aktualisierungstoken `offline_access` abzurufen.
     - **Melden Sie sich an, und lesen** Sie Ihr Profil: ( ) Mit dieser Berechtigung kann die App das Profil und Profilfoto des angemeldeten `User.Read` Benutzers erhalten.
     - **Lesen Der Postfacheinstellungen:** ( ) Mit dieser Berechtigung kann die App die Postfacheinstellungen des Benutzers lesen, einschließlich Zeitzone `MailboxSettings.Read` und Zeitzone.
     - **Haben Vollzugriff auf** Ihre Kalender: ( ) Diese Berechtigung ermöglicht der App, Ereignisse im Kalender des Benutzers zu lesen, neue Ereignisse hinzuzufügen und `Calendars.ReadWrite` vorhandene zu ändern.
@@ -169,7 +173,7 @@ Der neue Code erstellt ein Objekt, weist das Zugriffstoken zu und verwendet es d
 
 Nun, da Sie Token abrufen können, ist es an der Zeit, eine Möglichkeit einzurichten, diese in der App zu speichern. Da es sich um eine Beispiel-App handelt, speichern Sie sie der Einfachheit halber in der Sitzung. Eine echte App würde eine zuverlässigere sichere Speicherlösung wie eine Datenbank verwenden.
 
-1. Erstellen Sie ein neues Verzeichnis im **Verzeichnis ./app** mit dem Namen, erstellen Sie dann eine neue Datei in diesem Verzeichnis namens , und `TokenStore` fügen Sie den folgenden Code `TokenCache.php` hinzu.
+1. Erstellen Sie ein neues Verzeichnis im **Verzeichnis ./app** mit dem Namen, erstellen Sie dann eine neue Datei in diesem Verzeichnis namens , und fügen Sie `TokenStore` den folgenden Code `TokenCache.php` hinzu.
 
     ```php
     <?php
@@ -210,7 +214,7 @@ Nun, da Sie Token abrufen können, ist es an der Zeit, eine Möglichkeit einzuri
     }
     ```
 
-1. Fügen Sie die folgende Anweisung am oberen Rand von `use` **./app/Http/Controllers/AuthController.php** unter der Zeile `namespace App\Http\Controllers;` hinzu.
+1. Fügen Sie die folgende Anweisung am oberen Rand `use` von **./app/Http/Controllers/AuthController.php** unter der Zeile `namespace App\Http\Controllers;` hinzu.
 
     ```php
     use App\TokenStore\TokenCache;
